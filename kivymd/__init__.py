@@ -14,7 +14,7 @@ sacrificing ease of use or application performance.
 This library is a fork of the `KivyMD project
 <https://gitlab.com/kivymd/KivyMD>`_ the author of which stopped supporting
 this project three years ago. We found the strength and brought this project
-to a new level. Currently we're in **alpha** status, so things are changing
+to a new level. Currently we're in **beta** status, so things are changing
 all the time and we cannot promise any kind of API stability.
 However it is safe to vendor now and make use of what's currently available.
 
@@ -29,10 +29,16 @@ without asking too.
 """
 
 import os
+
 from kivy.logger import Logger
 
 __version__ = "0.104.1"
 """KivyMD version."""
+
+try:
+    from kivymd._version import __hash__, __short_hash__, __date__
+except ImportError:
+    __hash__ = __short_hash__ = __date__ = ""
 
 path = os.path.dirname(__file__)
 """Path to KivyMD package directory."""
@@ -43,7 +49,18 @@ fonts_path = os.path.join(path, f"fonts{os.sep}")
 images_path = os.path.join(path, f"images{os.sep}")
 """Path to images directory."""
 
-Logger.info(f"KivyMD: v{__version__}")
+if __short_hash__:
+    Logger.info(
+        f"KivyMD: v{__version__}, git-{__short_hash__}, {__date__}"
+        f' (installed at "{__file__}")'
+    )
+elif __date__:
+    Logger.info(
+        f'KivyMD: v{__version__}, {__date__} (installed at "{__file__}")'
+    )
+else:
+    Logger.info(f'KivyMD: v{__version__} (installed at "{__file__}")')
 
-import kivymd.factory_registers
-from kivymd.tools.packaging.pyinstaller import hooks_path
+import kivymd.factory_registers  # NOQA
+import kivymd.font_definitions  # NOQA
+from kivymd.tools.packaging.pyinstaller import hooks_path  # NOQA

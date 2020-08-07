@@ -64,24 +64,24 @@ Usage
 
 __all__ = ("MDDialog",)
 
+from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.metrics import dp
 from kivy.properties import (
-    StringProperty,
-    NumericProperty,
     ListProperty,
-    OptionProperty,
+    NumericProperty,
     ObjectProperty,
+    OptionProperty,
+    StringProperty,
 )
 from kivy.uix.modalview import ModalView
-from kivy.metrics import dp
-from kivy.core.window import Window
 
+from kivymd.material_resources import DEVICE_TYPE
 from kivymd.theming import ThemableBehavior
 from kivymd.uix.button import BaseButton
-from kivymd.uix.list import BaseListItem
 from kivymd.uix.card import MDSeparator
-from kivymd.material_resources import DEVICE_TYPE
-
+from kivymd.uix.list import BaseListItem
 
 Builder.load_string(
     """
@@ -90,16 +90,27 @@ Builder.load_string(
 
 <BaseDialog>
     background: '{}/transparent.png'.format(images_path)
-
+    canvas.before:
+        PushMatrix
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [5]
+        Scale:
+            origin: self.center
+            x: root._scale_x
+            y: root._scale_y
+    canvas.after:
+        PopMatrix
 
 <MDDialog>
-            
+
     MDCard:
         id: container
         orientation: "vertical"
         size_hint_y: None
         height: self.minimum_height
-        elevation: 12
+        elevation: 4
         md_bg_color: 0, 0, 0, 0
         padding: "24dp", "24dp", "8dp", "8dp"
 
@@ -166,7 +177,8 @@ Builder.load_string(
 
 
 class BaseDialog(ThemableBehavior, ModalView):
-    pass
+    _scale_x = NumericProperty(1)
+    _scale_y = NumericProperty(1)
 
 
 class MDDialog(BaseDialog):
@@ -339,7 +351,7 @@ class MDDialog(BaseDialog):
         <ItemConfirm>
             on_release: root.set_icon(check)
 
-            CheckboxRightWidget:
+            CheckboxLeftWidget:
                 id: check
                 group: "check"
 
@@ -514,6 +526,7 @@ class MDDialog(BaseDialog):
         else:
             self.create_buttons()
 
+        update_height = False
         if self.type in ("simple", "confirmation"):
             if self.type == "confirmation":
                 self.ids.spacer_top_box.add_widget(MDSeparator())
@@ -524,14 +537,20 @@ class MDDialog(BaseDialog):
                 self.ids.container.remove_widget(self.ids.scroll)
                 self.ids.container.remove_widget(self.ids.text)
                 self.ids.spacer_top_box.add_widget(self.content_cls)
-                self._spacer_top = self.content_cls.height + dp(24)
                 self.ids.spacer_top_box.padding = (0, "24dp", "16dp", 0)
+                update_height = True
         if self.type == "alert":
             self.ids.scroll.bar_width = 0
 
+        if update_height:
+            Clock.schedule_once(self.update_height)
+
+    def update_height(self, *_):
+        self._spacer_top = self.content_cls.height + dp(24)
+
     def on_open(self):
         # TODO: Add scrolling text.
-        pass
+        self.height = self.ids.container.height
 
     def set_normal_height(self):
         self.size_hint_y = 0.8

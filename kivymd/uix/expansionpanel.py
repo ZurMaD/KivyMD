@@ -96,7 +96,7 @@ Example
             for i in range(10):
                 self.root.ids.box.add_widget(
                     MDExpansionPanel(
-                        icon=f"{images_path}kivymd_logo.png",
+                        icon=f"{images_path}kivymd.png",
                         content=Content(),
                         panel_cls=MDExpansionPanelThreeLine(
                             text="Text",
@@ -131,9 +131,9 @@ The user function takes one argument - the object of the panel:
     def on_panel_open(self, instance_panel):
         print(instance_panel)
 
-.. seealso:: `See Expansion panel example <https://github.com/HeaTTheatR/KivyMD/wiki/Components-Expansion-Panel>`_
+.. seealso:: `See Expansion panel example <https://github.com/kivymd/KivyMD/wiki/Components-Expansion-Panel>`_
 
-    `Expansion panel and MDCard <https://github.com/HeaTTheatR/KivyMD/wiki/Components-Expansion-Panel-and-MDCard>`_
+    `Expansion panel and MDCard <https://github.com/kivymd/KivyMD/wiki/Components-Expansion-Panel-and-MDCard>`_
 """
 
 __all__ = (
@@ -143,19 +143,19 @@ __all__ = (
     "MDExpansionPanelThreeLine",
 )
 
-from kivy.lang import Builder
 from kivy.animation import Animation
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.lang import Builder
+from kivy.properties import NumericProperty, ObjectProperty, StringProperty
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.widget import WidgetException
 
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.list import (
+    ImageLeftWidget,
     IRightBodyTouch,
     OneLineAvatarIconListItem,
-    TwoLineAvatarIconListItem,
     ThreeLineAvatarIconListItem,
-    ImageLeftWidget,
+    TwoLineAvatarIconListItem,
 )
 
 Builder.load_string(

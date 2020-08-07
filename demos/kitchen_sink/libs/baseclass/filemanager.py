@@ -1,5 +1,3 @@
-import os
-
 from kivy.uix.screenmanager import Screen
 
 
@@ -8,21 +6,22 @@ class KitchenSinkFileManager(Screen):
     file_manager = None
 
     def file_manager_open(self):
-        from kivy.app import App
+        from kivymd.app import MDApp
 
         from kivymd.uix.filemanager import MDFileManager
         from kivymd.uix.dialog import MDDialog
         from kivymd.uix.button import MDFlatButton
 
         def open_file_manager(text_item):
-            previous = False if text_item == "List" else True
+            preview = False if text_item == "List" else True
             if not self.file_manager:
                 self.file_manager = MDFileManager(
                     exit_manager=self.exit_manager,
                     select_path=self.select_path,
+                    preview=preview,
                 )
-            self.file_manager.previous = previous
-            self.file_manager.show(App.get_running_app().user_data_dir)
+            self.file_manager.preview = preview
+            self.file_manager.show(MDApp.get_running_app().user_data_dir)
             self.manager_open = True
 
         MDDialog(
@@ -35,7 +34,7 @@ class KitchenSinkFileManager(Screen):
                 ),
                 MDFlatButton(
                     text="Previous",
-                    on_release=lambda x: open_file_manager("Previous"),
+                    on_release=lambda x: open_file_manager("Preview"),
                 ),
             ],
         ).open()

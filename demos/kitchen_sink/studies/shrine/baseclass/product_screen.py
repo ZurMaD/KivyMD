@@ -1,20 +1,15 @@
 import os
 
-from kivy.clock import Clock
-from kivy.core.window import Window
-from kivy.metrics import dp
-from kivy.properties import StringProperty, ListProperty
-from kivy.utils import get_color_from_hex
 from kivy.animation import Animation
+from kivy.properties import ListProperty, StringProperty
+from kivy.utils import get_color_from_hex
 
 from kivymd.color_definitions import colors
 from kivymd.theming import ThemableBehavior
+from kivymd.uix.behaviors import MagicBehavior
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.expansionpanel import MDExpansionPanel, MDExpansionPanelOneLine
-from kivymd.uix.behaviors import MagicBehavior
 from kivymd.uix.screen import MDScreen
-from kivymd.utils.cropimage import crop_image
-
 
 PATH_TO_IMAGES = f"{os.environ['KITCHEN_SINK_ROOT']}/studies/shrine/data/images"
 
@@ -64,15 +59,4 @@ class ProductScreen(ThemableBehavior, MDScreen):
             panel_cls=MDExpansionPanelOneLine(text="More information"),
         )
         self.ids.expansion_panel_box.add_widget(md_expansion_panel)
-
-        path = f"{PATH_TO_IMAGES}/previous_crop.jpg"
-        if not os.path.exists(path):
-            crop_image(
-                (Window.width, int(dp(Window.height * 35 // 100))),
-                f"{PATH_TO_IMAGES}/previous.jpg",
-                path,
-            )
-        Clock.schedule_once(lambda x: self.set_path_to_image_product(path), 0.2)
-
-    def set_path_to_image_product(self, path, interval=0):
-        self.ids.previous_image.source = path
+        self.ids.previous_image.source = f"{PATH_TO_IMAGES}/previous.jpg"

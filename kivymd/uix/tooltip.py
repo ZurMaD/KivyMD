@@ -28,7 +28,7 @@ In Python code:
     class TooltipMDIconButton(MDIconButton, MDTooltip):
         pass
 
-.. Warning:: :class:`~MDTooltip` only works correctly with button classes.
+.. Warning:: :class:`~MDTooltip` only works correctly with button and label classes.
 
 .. code-block:: python
 
@@ -61,22 +61,22 @@ In Python code:
 
 .. Note:: The behavior of tooltips on desktop and mobile devices is different.
     For more detailed information,
-    `click here <https://github.com/HeaTTheatR/KivyMD/wiki/Components-Tooltips>`_.
+    `click here <https://github.com/kivymd/KivyMD/wiki/Components-Tooltips>`_.
 """
 
 __all__ = ("MDTooltip", "MDTooltipViewClass")
 
-from kivy.clock import Clock
 from kivy.animation import Animation
+from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.metrics import dp
 from kivy.lang import Builder
+from kivy.metrics import dp
+from kivy.properties import ListProperty, NumericProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ListProperty, StringProperty, NumericProperty
 
+from kivymd.material_resources import DEVICE_TYPE
 from kivymd.theming import ThemableBehavior
 from kivymd.uix.behaviors import HoverBehavior, TouchBehavior
-from kivymd.material_resources import DEVICE_TYPE
 
 Builder.load_string(
     """
@@ -131,7 +131,7 @@ Builder.load_string(
 class MDTooltip(ThemableBehavior, HoverBehavior, TouchBehavior, BoxLayout):
     tooltip_bg_color = ListProperty()
     """Tooltip background color in ``rgba`` format.
-    
+
     :attr:`tooltip_bg_color` is an :class:`~kivy.properties.ListProperty`
     and defaults to `[]`.
     """
@@ -149,6 +149,8 @@ class MDTooltip(ThemableBehavior, HoverBehavior, TouchBehavior, BoxLayout):
     :attr:`tooltip_text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
+
+    padding = ListProperty([0, 0, 0, 0])
 
     _tooltip = None
 

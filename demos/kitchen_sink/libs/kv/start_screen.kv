@@ -1,10 +1,10 @@
 #:import environ os.environ
 #:import get_hex_from_color kivy.utils.get_hex_from_color
-#:import images_path kivymd.images_path
 #:import Animation kivy.animation.Animation
 #:import Home libs.baseclass.home.Home
 #:import KitchenSinkDialogLicense libs.baseclass.dialog_change_theme.KitchenSinkDialogLicense
 #:import KitchenSinkDialogDev libs.baseclass.dialog_change_theme.KitchenSinkDialogDev
+#:import Toolbar libs.baseclass.toolbar.Toolbar
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 
 
@@ -13,6 +13,14 @@
     font_size: "24sp"
     size_hint_y: None
     height: self.texture_size[1]
+
+<Toolbar>
+    md_bg_color: app.theme_cls.primary_color
+    background_palette: 'Primary'
+    background_hue: '500'
+    elevation: 10
+    right_action_items: [['brightness-6', lambda x: app.switch_theme_style()], ['dots-vertical', lambda x: x]]
+    left_action_items: [["arrow-left", lambda x: app.back_to_home_screen()]]
 
 
 BoxLayout:
@@ -95,7 +103,7 @@ BoxLayout:
             PopMatrix
 
         opacity: .2
-        source: f"{images_path}kivymd_alpha.png"
+        source: f"{environ['KITCHEN_SINK_ASSETS']}kivymd.png"
         pos_hint: {"center_y": .55}
 
     ScreenManager:
@@ -134,9 +142,7 @@ BoxLayout:
                                 size_hint: None, None
                                 size: "48dp", '48dp'
                                 active: True
-                                on_active:
-                                    if self.active: app.theme_cls.theme_style = "Light"
-                                    root.backdrop.ids._front_layer.md_bg_color = [0, 0, 0, 0]
+                                on_active: if self.active: app.switch_theme_style()
 
                             Label:
                                 text: "Light"
@@ -146,9 +152,7 @@ BoxLayout:
                                 group: "style"
                                 size_hint: None, None
                                 size: "48dp", '48dp'
-                                on_active:
-                                    if self.active: app.theme_cls.theme_style = "Dark"
-                                    root.backdrop.ids._front_layer.md_bg_color = [0, 0, 0, 0]
+                                on_active: if self.active: app.switch_theme_style()
 
                             Label:
                                 text: "Dark"
